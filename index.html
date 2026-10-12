@@ -692,6 +692,7 @@ function calcular(){
   var bt=val("bristol"),bd="";
   if(bt!==""){bt=+bt;bd=bt<=2?"Estreñimiento":bt<=4?"Tránsito intestinal normal":bt===5?"Tendencia a heces blandas (falta de fibra o inicio de diarrea)":"Diarrea"}
   $("bristol_dx").value=bd;
+  var fi=$("fx_int");if(fi&&(fi.value===""||/^Bristol tipo/.test(fi.value))){fi.value=bd?"Bristol tipo "+bt+": "+bd:""}
   var dn=num("dinamo"),corte=sx==="F"?16:27,dd="";
   if(dn!==null&&sx){dd=dn<corte?"Fuerza disminuida (probable sarcopenia)":"Fuerza normal"}
   $("dinamo_dx").value=dd;
