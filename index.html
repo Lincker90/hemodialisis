@@ -463,7 +463,7 @@ function a4(d,pac,cie){
   GR.forEach(function(n,i){var f=g("fc"+i);fr.push(R([C(String(i+1),{w:fw[0],sz:7,al:CEN}),C(n,{w:fw[1],sz:7}),C(f==="diario"?X:"",{w:fw[2],sz:7,al:CEN}),C(f==="semanal"?X:"",{w:fw[3],sz:7,al:CEN}),C(f==="mensual"?X:"",{w:fw[4],sz:7,al:CEN}),C(f==="nunca"?"Nunca":"",{w:fw[5],sz:7,al:CEN})]))});
   var frt=T(fr,fw);
   o.push(T([R([C([small("R24 H:",{b:1}),r24t,P("",{sa:0})],{w:5100}),C([small("FREC CONSUMO:",{b:1}),frt,P("",{sa:0})],{w:5106})])],[5100,5106]));
-  o.push(T([R([C([small("E) ECOLOGICA",{b:1}),small(g("ecologica"))],{w:5100}),C([small("F) FUNCIONAL",{b:1}),small(g("funcional"))],{w:5106})],700)],[5100,5106]));
+  o.push(T([R([C([small("E) ECOLOGICA",{b:1}),small(g("ecologica"))],{w:5100}),C([small("F) FUNCIONAL",{b:1}),small((d.dinamo?"Fuerza de agarre (dinamómetro): "+d.dinamo+" kg"+(d.dinamo_dx?" - "+d.dinamo_dx:"")+(g("funcional")?". ":""):"")+g("funcional"))],{w:5106})],700)],[5100,5106]));
   o.push(band("DIAGNOSTICO NUTRICIONAL (CIE-10)"));
   o.push(T([R([C([small((cie.nut||[]).join("\n").split("\n").join("; "))],{w:W})],700)],[W]));
   o.push(band("INTERVENCION NUTRICIONAL"));
@@ -539,7 +539,7 @@ var SECC=[
  {t:"C. Signos clínicos",f:[["piel","Piel","text"],["cabello","Cabello","text"],["boca","Boca","text"],["labios","Labios","text"],["unas","Uñas","text"]]},
  {t:"D. Dietética",f:[["tolerancia","Tolerancia","text"],["apetito","Apetito","text"],["fx_int","Función intestinal","text"],["dentadura","Dentadura","text"],["deglucion","Deglución","text"],["interaccion","Interacción fármaco-nutriente","text",2],["r_des","Recordatorio 24 h: desayuno","area"],["r_mm","Media mañana","area"],["r_alm","Almuerzo","area"],["r_mt","Media tarde","area"],["r_cena","Cena","area"]]},
  {t:"Frecuencia de consumo",f:GRUPOS.map(function(g,i){return ["fc"+i,(i+1)+". "+g,"sel",FREQ]})},
- {t:"E. Ecológica y F. Funcional",f:[["ecologica","E. Ecológica","area",2],["funcional","F. Funcional","area",2]]},
+ {t:"E. Ecológica y F. Funcional",calc:"func",f:[["ecologica","E. Ecológica","area",2],["dinamo","Fuerza de agarre con dinamómetro (kg, mano dominante)","number"],["dinamo_dx","Diagnóstico de fuerza de agarre","ro"],["funcional","F. Funcional (observaciones)","area",2]]},
  {t:"Diagnóstico nutricional",cie:"nut",f:[]},
  {t:"Intervención nutricional",f:[],tabla:true,f3:[["dieta","Dieta","text",2],["consistencia","Consistencia","text"],["volumen","Volumen total","text"]],f2:[["micro","Micronutrientes","text",2],["agua","Agua","text"]]}
 ];
@@ -689,6 +689,10 @@ function calcular(){
   if(k!==null&&(k>5.5||k<3.5))a.push("potasio fuera de 3.5 a 5.5");
   if(f!==null&&(f>5.5||f<3.5))a.push("fósforo fuera de 3.5 a 5.5");
   $("calc-bio").innerHTML=a.length?"<span class='pill crit'>Alerta</span> "+a.join(", "):"Sin alertas con los valores ingresados (albúmina ≥ 3.5, K y P entre 3.5 y 5.5).";
+  var dn=num("dinamo"),corte=sx==="F"?16:27,dd="";
+  if(dn!==null&&sx){dd=dn<corte?"Fuerza disminuida (probable sarcopenia)":"Fuerza normal"}
+  $("dinamo_dx").value=dd;
+  $("calc-func").innerHTML=dn===null?"Escribe los kg del dinamómetro para obtener el diagnóstico. Puntos de corte EWGSOP2: mujer < 16 kg, varón < 27 kg.":(!sx?"Elige el sexo en Datos generales para calcular.":"Dinamómetro: <b>"+dn+" kg</b> · "+(dn<corte?"<span class='pill crit'>Fuerza disminuida (probable sarcopenia)</span>":"<span class='pill ok'>Fuerza normal</span>")+" · Corte EWGSOP2 para "+(sx==="F"?"mujer: < 16":"varón: < 27")+" kg.");
   calcPresc();
   actualizarSugerencia();
 }

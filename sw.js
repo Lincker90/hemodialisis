@@ -1,5 +1,5 @@
 /* Guarda el programa en el equipo para que funcione sin internet. Si actualizas los archivos, cambia el número de versión. */
-var VERSION = "hd-v1";
+var VERSION = "hd-v2";
 var ARCHIVOS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "vendor/docx.js", "vendor/xlsx.js"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(ARCHIVOS); }).then(function () { return self.skipWaiting(); }));
